@@ -27,7 +27,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BaseResponse update(Long id, CreateUserRequest request) {
+    public BaseResponse update(String id, CreateUserRequest request) {
         User user = findAndEnsureExist(id);
 
         user.setName(request.getName());
@@ -42,7 +42,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         repository.delete(findAndEnsureExist(id));
     }
 
@@ -65,7 +65,7 @@ public class UserServiceImpl implements IUserService {
         return response;
     }
 
-    private User findAndEnsureExist(Long id){
+    private User findAndEnsureExist(String id){
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     }
 }

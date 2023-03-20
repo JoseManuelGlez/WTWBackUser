@@ -18,12 +18,12 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public BaseResponse update(@PathVariable Long id, @RequestBody CreateUserRequest request){
+    public BaseResponse update(@PathVariable String id, @RequestBody CreateUserRequest request){
         return service.update(id, request);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable String id) {
         service.delete(id);
     }
 }
