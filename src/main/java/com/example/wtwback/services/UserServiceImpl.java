@@ -1,9 +1,13 @@
 package com.example.wtwback.services;
 
 import com.example.wtwback.controllers.dtos.requests.CreateUserRequest;
+import com.example.wtwback.controllers.dtos.requests.ValidateUserRequest;
 import com.example.wtwback.controllers.dtos.responses.BaseResponse;
 import com.example.wtwback.controllers.dtos.responses.CreateUserResponse;
+import com.example.wtwback.controllers.dtos.responses.ValidateUserResponse;
+import com.example.wtwback.controllers.exceptions.UserValidateException;
 import com.example.wtwback.entities.User;
+import com.example.wtwback.entities.projections.UserProjection;
 import com.example.wtwback.repositories.IUserRepository;
 import com.example.wtwback.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +48,33 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void delete(String id) {
         repository.delete(findAndEnsureExist(id));
+    }
+
+    @Override
+    public BaseResponse validate(ValidateUserRequest request) {
+        UserProjection user =from(request);
+        try {
+            return BaseResponse.builder()
+                    .data(from(user))
+                    .message("User validated correctly")
+                    .success(Boolean.TRUE)
+                    .httpStatus(HttpStatus.CREATED).build();
+        } catch (Exception e) {
+            throw new UserValidateException("User not found");
+        }
+    }
+
+    private ValidateUserResponse from(UserProjection projection) {
+        ValidateUserResponse response = new ValidateUserResponse();
+        response.setId(projection.getUserId());
+        response.setName(projection.getName());
+        response.setEmail(projection.getUserEmail());
+        response.setPassword(projection.getUserPassword());
+        return response;
+    }
+
+    private UserProjection from(ValidateUserRequest request){
+        return repository.findByEmailAndPassword(request.getEmail(), request.getPassword());
     }
 
     private User from(CreateUserRequest request) {

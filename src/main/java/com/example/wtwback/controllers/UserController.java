@@ -1,6 +1,7 @@
 package com.example.wtwback.controllers;
 
 import com.example.wtwback.controllers.dtos.requests.CreateUserRequest;
+import com.example.wtwback.controllers.dtos.requests.ValidateUserRequest;
 import com.example.wtwback.controllers.dtos.responses.BaseResponse;
 import com.example.wtwback.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UserController {
     public BaseResponse update(@PathVariable String id, @RequestBody CreateUserRequest request){
         return service.update(id, request);
     }
+
+    @PostMapping("validate")
+    public BaseResponse validate(@RequestBody ValidateUserRequest request){ return service.validate(request);}
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable String id) {
