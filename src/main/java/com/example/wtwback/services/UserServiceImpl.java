@@ -7,7 +7,7 @@ import com.example.wtwback.controllers.dtos.responses.CreateUserResponse;
 import com.example.wtwback.controllers.dtos.responses.ValidateUserResponse;
 import com.example.wtwback.controllers.exceptions.UserValidateException;
 import com.example.wtwback.entities.User;
-import com.example.wtwback.entities.projections.UserProjection;
+import com.example.wtwback.entities.projections.IUserProjection;
 import com.example.wtwback.repositories.IUserRepository;
 import com.example.wtwback.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public BaseResponse update(String id, CreateUserRequest request) {
+    public BaseResponse update(Long id, CreateUserRequest request) {
         User user = findAndEnsureExist(id);
 
         user.setName(request.getName());
@@ -46,13 +46,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(Long id) {
         repository.delete(findAndEnsureExist(id));
     }
 
     @Override
     public BaseResponse validate(ValidateUserRequest request) {
-        UserProjection user =from(request);
+        IUserProjection user = from(request);
         try {
             return BaseResponse.builder()
                     .data(from(user))
@@ -64,25 +64,26 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    private ValidateUserResponse from(UserProjection projection) {
+    private ValidateUserResponse from(IUserProjection projection) {
         ValidateUserResponse response = new ValidateUserResponse();
         response.setId(projection.getUserId());
-        response.setName(projection.getName());
+        response.setName(projection.getUserName());
         response.setEmail(projection.getUserEmail());
         response.setPassword(projection.getUserPassword());
+        response.setLastName(projection.getUserLastName());
         return response;
     }
 
-    private UserProjection from(ValidateUserRequest request){
-        return repository.findByEmailAndPassword(request.getEmail(), request.getPassword());
+    private IUserProjection from(ValidateUserRequest request){
+        return repository.findUserByEmailAndPassword(request.getEmail(), request.getPassword());
     }
 
     private User from(CreateUserRequest request) {
         User user = new User();
         user.setEmail(request.getEmail());
-        user.setLastName(request.getName());
-        user.setPassword(request.getPassword());
         user.setName(request.getName());
+        user.setPassword(request.getPassword());
+        user.setLastName(request.getLastName());
         return user;
     }
 
@@ -90,13 +91,13 @@ public class UserServiceImpl implements IUserService {
         CreateUserResponse response = new CreateUserResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
-        response.setLastName(user.getName());
+        response.setLastName(user.getLastName());
         response.setName(user.getName());
         response.setPassword(user.getPassword());
         return response;
     }
 
-    private User findAndEnsureExist(String id){
+    private User findAndEnsureExist(Long id){
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     }
 }

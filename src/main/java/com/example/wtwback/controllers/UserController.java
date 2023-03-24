@@ -19,15 +19,17 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public BaseResponse update(@PathVariable String id, @RequestBody CreateUserRequest request){
+    public BaseResponse update(@PathVariable Long id, @RequestBody CreateUserRequest request){
         return service.update(id, request);
     }
 
     @PostMapping("validate")
-    public BaseResponse validate(@RequestBody ValidateUserRequest request){ return service.validate(request);}
+    public BaseResponse validate(@RequestBody ValidateUserRequest request){
+        return service.validate(request);
+    }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable String id) {
+    public void delete(@PathVariable Long id) {
         service.delete(id);
     }
 }

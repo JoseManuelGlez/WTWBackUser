@@ -7,9 +7,9 @@ import com.example.wtwback.controllers.dtos.responses.BaseResponse;
 public interface IUserService {
     BaseResponse create(CreateUserRequest request);
 
-    BaseResponse update(String id, CreateUserRequest request);
+    BaseResponse update(Long id, CreateUserRequest request);
 
     BaseResponse validate(ValidateUserRequest request);
 
-    void delete(String id);
+    void delete(Long id);
 }
