@@ -12,4 +12,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
             "users.email AS userEmail, users.password AS userPassword FROM users " +
             "WHERE users.email = :email AND users.password = :password ;", nativeQuery = true)
     IUserProjection findUserByEmailAndPassword(String email, String password);
+
+    //select email from Users where id (select id_user from ESP32 where ESP32.id = :clave)
 }
