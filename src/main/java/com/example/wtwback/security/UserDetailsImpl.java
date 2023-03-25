@@ -1,6 +1,6 @@
 package com.example.wtwback.security;
 
-import com.example.galloween2.entities.User;
+import com.example.wtwback.entities.User;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,6 +49,6 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public String getName(){
-        return user.getFullName();
+        return user.getName();
     }
 }
